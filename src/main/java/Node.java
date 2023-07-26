@@ -32,8 +32,8 @@ public class Node {
     }
 
     public static void main(String[] args) {
-        String serverAddress = "localhost";
-        int serverPort = 5000;
+        String serverAddress = "35.215.165.210";
+        int serverPort = 12345;
 
         Node node1 = new Node("Node 1", serverAddress, serverPort);
         Node node2 = new Node("Node 2", serverAddress, serverPort);

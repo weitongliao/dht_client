@@ -35,7 +35,7 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        int port = 5000;
+        int port = 12345;
         Server server = new Server();
         server.start(port);
     }
