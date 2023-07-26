@@ -21,6 +21,7 @@ public class Client {
             String otherClientIP = parts[0];
             int otherClientPort = Integer.parseInt(parts[1]);
 
+            System.out.println("get ip"+otherClientIP+otherClientPort);
             // Close the server connection
             socket.close();
 
