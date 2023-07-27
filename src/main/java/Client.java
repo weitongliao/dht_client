@@ -1,6 +1,7 @@
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
@@ -30,6 +31,37 @@ public class Client {
 
             // 客户端之间直接进行P2P通信
             // TODO: 在此处实现P2P通信逻辑，使用nodeIP和nodePort进行P2P连接
+            try {
+                // 创建DatagramSocket对象
+                DatagramSocket new_clientSocket = new DatagramSocket();
+
+                // 启动接收消息线程
+                new Thread(() -> {
+                    byte[] new_receiveData = new byte[1024];
+                    while (true) {
+                        try {
+                            DatagramPacket new_receivePacket = new DatagramPacket(new_receiveData, new_receiveData.length);
+                            clientSocket.receive(new_receivePacket);
+                            String message = new String(new_receivePacket.getData(), 0, new_receivePacket.getLength());
+                            System.out.println("收到来自节点1的消息：" + message);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }).start();
+
+                // 发送消息给节点1
+                Scanner scanner = new Scanner(System.in);
+                while (true) {
+                    System.out.print("请输入要发送的消息：");
+                    String message = scanner.nextLine();
+                    byte[] new_sendData = message.getBytes();
+                    DatagramPacket new_sendPacket = new DatagramPacket(new_sendData, new_sendData.length, InetAddress.getByName(nodeIP), nodePort);
+                    clientSocket.send(new_sendPacket);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
