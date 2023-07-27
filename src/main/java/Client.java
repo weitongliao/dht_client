@@ -27,7 +27,7 @@ public class Client {
 
             // Connect to the other client directly
             Socket directSocket = new Socket(otherClientIP, otherClientPort);
-
+            System.out.println("ok");
             // Now both clients (this and the other) are connected directly, and they can exchange messages.
             // Here, you can implement your P2P communication logic between the two clients.
             // You can use directSocket.getInputStream() and directSocket.getOutputStream() to send/receive data.
