@@ -1,55 +1,93 @@
-// Client.java
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.Socket;
-import java.util.Scanner;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 public class Client {
     public static void main(String[] args) {
         try {
-            // Connect to the server
-            String serverAddress = "35.215.165.210";
-            int serverPort = 12345;
-            Socket socket = new Socket(serverAddress, serverPort);
+            // 加入服务器
+            DatagramSocket clientSocket = new DatagramSocket();
 
-            // Receive client info from the server
-            byte[] buffer = new byte[1024];
-            int bytesRead = socket.getInputStream().read(buffer);
-            String clientInfo = new String(buffer, 0, bytesRead);
-            String[] parts = clientInfo.split(",");
-            String otherClientIP = parts[0];
-            int otherClientPort = Integer.parseInt(parts[1]);
+            String request = "join";
+            byte[] sendData = request.getBytes();
+            DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("35.215.165.210"), 12345);
+            clientSocket.send(sendPacket);
 
-            System.out.println("get ip"+otherClientIP+otherClientPort);
-            // Close the server connection
-            socket.close();
+            // 接收服务器响应
+            byte[] receiveData = new byte[1024];
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            clientSocket.receive(receivePacket);
 
-            // Connect to the other client directly
-            Socket directSocket = new Socket(otherClientIP, otherClientPort);
-            System.out.println("ok");
-            // Now both clients (this and the other) are connected directly, and they can exchange messages.
-            // Here, you can implement your P2P communication logic between the two clients.
-            // You can use directSocket.getInputStream() and directSocket.getOutputStream() to send/receive data.
-            OutputStream outputStream = directSocket.getOutputStream();
-            InputStream inputStream = directSocket.getInputStream();
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Enter a message to send to the other client: ");
-            String messageToSend = scanner.nextLine();
-            outputStream.write(messageToSend.getBytes());
+            // 解析服务器响应，获取节点信息
+            String response = new String(receivePacket.getData(), 0, receivePacket.getLength());
+            String[] info = response.split(",");
+            int nodeId = Integer.parseInt(info[0]);
+            String nodeIP = info[1];
+            int nodePort = Integer.parseInt(info[2]);
 
+            // 关闭与服务器的连接
+            clientSocket.close();
 
-            byte[] receivedBuffer = new byte[1024];
-            int bytesReceived = inputStream.read(receivedBuffer);
-            String receivedMessage = new String(receivedBuffer, 0, bytesReceived);
-            System.out.println("Received message from the other client: " + receivedMessage);
-
-            // Remember to handle exceptions and close sockets properly in a real-world implementation.
-        } catch (IOException e) {
+            // 客户端之间直接进行P2P通信
+            // TODO: 在此处实现P2P通信逻辑，使用nodeIP和nodePort进行P2P连接
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
+
+//// Client.java
+//import java.io.IOException;
+//import java.io.InputStream;
+//import java.io.OutputStream;
+//import java.net.Socket;
+//import java.util.Scanner;
+//
+//public class Client {
+//    public static void main(String[] args) {
+//        try {
+//            // Connect to the server
+//            String serverAddress = "35.215.165.210";
+//            int serverPort = 12345;
+//            Socket socket = new Socket(serverAddress, serverPort);
+//
+//            // Receive client info from the server
+//            byte[] buffer = new byte[1024];
+//            int bytesRead = socket.getInputStream().read(buffer);
+//            String clientInfo = new String(buffer, 0, bytesRead);
+//            String[] parts = clientInfo.split(",");
+//            String otherClientIP = parts[0];
+//            int otherClientPort = Integer.parseInt(parts[1]);
+//
+//            System.out.println("get ip"+otherClientIP+otherClientPort);
+//            // Close the server connection
+//            socket.close();
+//
+//            // Connect to the other client directly
+//            Socket directSocket = new Socket(otherClientIP, otherClientPort);
+//            System.out.println("ok");
+//            // Now both clients (this and the other) are connected directly, and they can exchange messages.
+//            // Here, you can implement your P2P communication logic between the two clients.
+//            // You can use directSocket.getInputStream() and directSocket.getOutputStream() to send/receive data.
+//            OutputStream outputStream = directSocket.getOutputStream();
+//            InputStream inputStream = directSocket.getInputStream();
+//            Scanner scanner = new Scanner(System.in);
+//            System.out.print("Enter a message to send to the other client: ");
+//            String messageToSend = scanner.nextLine();
+//            outputStream.write(messageToSend.getBytes());
+//
+//
+//            byte[] receivedBuffer = new byte[1024];
+//            int bytesReceived = inputStream.read(receivedBuffer);
+//            String receivedMessage = new String(receivedBuffer, 0, bytesReceived);
+//            System.out.println("Received message from the other client: " + receivedMessage);
+//
+//            // Remember to handle exceptions and close sockets properly in a real-world implementation.
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//}
 
 //import java.io.*;
 //import java.net.*;

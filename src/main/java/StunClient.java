@@ -33,6 +33,7 @@ public class StunClient {
         proxyIp=_ip;
         proxyPort=_port;
         clientPort=Integer.parseInt(p.getProperty("clientPort"));
+        System.out.println(clientPort);
         socket=new DatagramSocket(clientPort);
     }
 
