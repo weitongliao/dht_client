@@ -1,3 +1,9 @@
+import org.ice4j.Transport;
+import org.ice4j.TransportAddress;
+import org.ice4j.ice.Agent;
+import org.ice4j.ice.IceMediaStream;
+import org.ice4j.ice.harvest.StunCandidateHarvester;
+
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -30,40 +36,63 @@ public class Client {
 //            clientSocket.close();
             System.out.println(response);
 
+            Agent agent = new Agent(); // A simple ICE Agent
+
+/*** Setup the STUN servers: ***/
+            String[] hostnames = new String[] {"jitsi.org","numb.viagenie.ca","stun.ekiga.net"};
+// Look online for actively working public STUN Servers. You can find free servers.
+// Now add these URLS as Stun Servers with standard 3478 port for STUN servrs.
+            for(String hostname: hostnames){
+                try {
+                    // InetAddress qualifies a url to an IP Address, if you have an error here, make sure the url is reachable and correct
+                    TransportAddress ta = new TransportAddress(InetAddress.getByName(hostname), 3478, Transport.UDP);
+                    // Currently Ice4J only supports UDP and will throw an Error otherwise
+                    agent.addCandidateHarvester(new StunCandidateHarvester(ta));
+                } catch (Exception e) { e.printStackTrace();}
+            }
+            IceMediaStream stream = agent.createMediaStream("audio");
+            int port = 5000; // Choose any port
+            agent.createComponent(stream, Transport.UDP, port, port, port+100);
+
+            DatagramPacket packet = new DatagramPacket(new byte[10000],10000);
+//            packet.setAddress(hostname);
+//            packet.setPort(port);
+//            wrapper.send(packet);
+// The three last arguments are: preferredPort, minPort, maxPort
             // 客户端之间直接进行P2P通信
             // TODO: 在此处实现P2P通信逻辑，使用nodeIP和nodePort进行P2P连接
-            try {
+//            try {
                 // 创建DatagramSocket对象
 //                DatagramSocket new_clientSocket = new DatagramSocket();
 
                 // 启动接收消息线程
-                new Thread(() -> {
-                    byte[] new_receiveData = new byte[1024];
-                    while (true) {
-                        try {
-                            System.out.println("receive");
-                            DatagramPacket new_receivePacket = new DatagramPacket(new_receiveData, new_receiveData.length);
-                            clientSocket.receive(new_receivePacket);
-                            String message = new String(new_receivePacket.getData(), 0, new_receivePacket.getLength());
-                            System.out.println("收到来自节点1的消息：" + message);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+//                new Thread(() -> {
+//                    byte[] new_receiveData = new byte[1024];
+//                    while (true) {
+//                        try {
+//                            System.out.println("receive");
+//                            DatagramPacket new_receivePacket = new DatagramPacket(new_receiveData, new_receiveData.length);
+//                            clientSocket.receive(new_receivePacket);
+//                            String message = new String(new_receivePacket.getData(), 0, new_receivePacket.getLength());
+//                            System.out.println("收到来自节点1的消息：" + message);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                    }
+//                }).start();
 
                 // 发送消息给节点1
-                Scanner scanner = new Scanner(System.in);
-                while (true) {
-                    System.out.print("请输入要发送的消息：");
-                    String message = scanner.nextLine();
-                    byte[] new_sendData = message.getBytes();
-                    DatagramPacket new_sendPacket = new DatagramPacket(new_sendData, new_sendData.length, InetAddress.getByName(nodeIP), nodePort);
-                    clientSocket.send(new_sendPacket);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+//                Scanner scanner = new Scanner(System.in);
+//                while (true) {
+//                    System.out.print("请输入要发送的消息：");
+//                    String message = scanner.nextLine();
+//                    byte[] new_sendData = message.getBytes();
+//                    DatagramPacket new_sendPacket = new DatagramPacket(new_sendData, new_sendData.length, InetAddress.getByName(nodeIP), nodePort);
+//                    clientSocket.send(new_sendPacket);
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }

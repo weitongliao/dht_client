@@ -13,6 +13,16 @@
 <!--            <artifactId>jgroups</artifactId>-->
 <!--            <version>5.2.13.Final</version>-->
 <!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.jitsi/ice4j -->
+        <!-- https://mvnrepository.com/artifact/org.jitsi/ice4j -->
+        <dependency>
+            <groupId>org.jitsi</groupId>
+            <artifactId>ice4j</artifactId>
+            <version>3.0-24-g34c2ce5</version>
+        </dependency>
+
+
+
 
     </dependencies>
 
