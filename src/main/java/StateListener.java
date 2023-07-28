@@ -1,7 +1,5 @@
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 
 import org.ice4j.TransportAddress;
@@ -34,17 +32,6 @@ public class StateListener implements PropertyChangeListener {
                         TransportAddress ta = rtpPair.getRemoteCandidate().getTransportAddress();
                         hostname = ta.getAddress();
                         port = ta.getPort();
-
-                        DatagramPacket packet = new DatagramPacket(new byte[10000],10000);
-                        packet.setAddress(hostname);
-                        packet.setPort(port);
-                        try {
-                            wrapper.send(packet);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-//                        DatagramPacket packet = new DatagramPacket(new byte[10000],10000);
-//                        wrapper.receive(packet); // This will block until you receive data that you can use.
                     }
                 }
             }
