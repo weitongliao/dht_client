@@ -13,12 +13,12 @@ public class Client {
             byte[] sendData = request.getBytes();
             DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, InetAddress.getByName("35.215.165.210"), 12345);
             clientSocket.send(sendPacket);
-
+            System.out.println("aa");
             // 接收服务器响应
             byte[] receiveData = new byte[1024];
             DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
             clientSocket.receive(receivePacket);
-
+            System.out.println("bb");
             // 解析服务器响应，获取节点信息
             String response = new String(receivePacket.getData(), 0, receivePacket.getLength());
             String[] info = response.split(",");
@@ -27,19 +27,21 @@ public class Client {
             int nodePort = Integer.parseInt(info[2]);
 
             // 关闭与服务器的连接
-            clientSocket.close();
+//            clientSocket.close();
+            System.out.println(response);
 
             // 客户端之间直接进行P2P通信
             // TODO: 在此处实现P2P通信逻辑，使用nodeIP和nodePort进行P2P连接
             try {
                 // 创建DatagramSocket对象
-                DatagramSocket new_clientSocket = new DatagramSocket();
+//                DatagramSocket new_clientSocket = new DatagramSocket();
 
                 // 启动接收消息线程
                 new Thread(() -> {
                     byte[] new_receiveData = new byte[1024];
                     while (true) {
                         try {
+                            System.out.println("receive");
                             DatagramPacket new_receivePacket = new DatagramPacket(new_receiveData, new_receiveData.length);
                             clientSocket.receive(new_receivePacket);
                             String message = new String(new_receivePacket.getData(), 0, new_receivePacket.getLength());
