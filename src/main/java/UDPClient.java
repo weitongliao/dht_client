@@ -33,11 +33,15 @@ public class UDPClient {
             int clientPort = Integer.parseInt(parts[1].substring(parts[1].indexOf(":") + 2));
 
             // 关闭客户端Socket
-            clientSocket.close();
+
 
             // 使用获取到的对方IP和端口进行P2P通信（这里省略了P2P通信的代码）
             System.out.println("P2P communication with Client " + (isClient1 ? "2" : "1") + ":");
             // Your P2P communication code here...
+            DatagramPacket sendPacket2 = new DatagramPacket("aaaa".getBytes(), sendData.length, InetAddress.getByName(clientIP), clientPort);
+            clientSocket.send(sendPacket);
+
+            clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
