@@ -129,6 +129,7 @@ public class IceTest {
         String remoteReceived = peerInfo.toString(); // This information was grabbed from the server, and shouldn't be empty.
         SdpUtils.parseSDP(agent, remoteReceived); // This will add the remote information to the agent.
         //Hopefully now your Agent is totally setup. Now we need to start the connections:
+        System.out.println("ok");
 
         agent.addStateChangeListener(new StateListener()); // We will define this class soon
         // You need to listen for state change so that once connected you can then use the socket.
