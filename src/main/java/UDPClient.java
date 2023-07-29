@@ -31,7 +31,7 @@ public class UDPClient {
             String[] parts = ipInfo.split(", ");
             String clientIP = parts[0].substring(parts[0].indexOf(":") + 2);
             int clientPort = Integer.parseInt(parts[1].substring(parts[1].indexOf(":") + 2));
-
+            System.out.println(clientIP+":"+clientPort);
             // 关闭客户端Socket
 
 
